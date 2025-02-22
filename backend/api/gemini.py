@@ -1,4 +1,3 @@
-import os
 import random
 import string
 from google.genai import Client
@@ -26,11 +25,14 @@ class GeminiClient():
 
         # TODO: fill this in later
         pre_prompt = f"""
-        Below is my CV/Resume can you take this and convert the details (skills, education, work expeirence) to a consistent json format like this:
+        Below is my CV/Resume, can you take this and convert the details 
+        (skills, education, work expeirence) to a consistent json format like this:
 
         ```json
         {EXAMPLE_JSON}
         ```
+
+        --- where the resume starts ---\n
         """
 
         response = self.client.models.generate_content(
