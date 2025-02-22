@@ -1,8 +1,9 @@
 from fastapi import FastAPI, UploadFile
 from fastapi.responses import JSONResponse
 from fastapi.exceptions import HTTPException
-
 from pydantic import BaseModel
+import pymupdf
+from io import TextIOWrapper, BytesIO
 
 from .gemini import GeminiClient
 
@@ -15,12 +16,14 @@ class Resume(BaseModel):
 async def submit_resume(resume_file: UploadFile) -> JSONResponse:
     if not resume_file.content_type == "application/pdf":
         raise HTTPException(400, detail = "API only accepts PDF files for now!")
-    
+
     client = GeminiClient()
 
-    # TODO: this will change to a dictionary later
-    data = client.send_resume("test test")
+    resume_file_bytes = await resume_file.read()
 
-    return {
-        "test": data.text
-    }
+    pdf_document = pymupdf.open(stream = resume_file_bytes, filetype = "pdf")
+    resume_string = "\n".join(page.get_text() for page in pdf_document)
+
+    data = client.send_resume(resume_string)
+
+    return data
