@@ -37,6 +37,83 @@ ground.rotation.x = -Math.PI / 2;
 ground.receiveShadow = true;
 scene.add(ground);
 
+// ✅ Adding Cross Roads with Junction
+function createRoad(x, z, width, height, rotation = 0) {
+    const roadGeometry = new THREE.PlaneGeometry(width, height);
+    const roadMaterial = new THREE.MeshStandardMaterial({ color: 0x222222 });
+    const road = new THREE.Mesh(roadGeometry, roadMaterial);
+    road.rotation.x = -Math.PI / 2;
+    road.position.set(x, 4, z); // height is 4
+    road.rotation.z = rotation;
+    scene.add(road);
+}
+
+// Creating roads in a cross pattern
+createRoad(0, 0, 2000, 200); // Horizontal Road
+createRoad(0, 0, 200, 2000); // Vertical Road
+// createRoad(0, 0, 400, 400); // Junction
+
+// ✅ Function to Add Rocks
+function createRock(x, z) {
+    const rock = new THREE.Mesh(new THREE.DodecahedronGeometry(Math.random() * 50 + 20), new THREE.MeshStandardMaterial({ color: 0x808080, roughness: 1 }));
+    rock.position.set(x, 5, z);
+    rock.rotation.set(Math.random() * Math.PI, Math.random() * Math.PI, Math.random() * Math.PI);
+    rock.castShadow = rock.receiveShadow = true;
+    scene.add(rock);
+}
+
+const rockPositions = [
+    [-1150, -750], [980, 1150], [-1080, 920], [1350, -1450], [690, 1680], [-1580, 530], [1280, -1380], [-100, 200], [400, -500]
+];
+rockPositions.forEach(([x, z]) => createRock(x, z));
+
+// ✅ Function to Add Signposts
+function createSignpost(text, x, z, offsetX = 250, offsetZ = 250) {
+    // Create pole
+    const poleGeometry = new THREE.CylinderGeometry(5, 5, 130, 16);
+    const poleMaterial = new THREE.MeshStandardMaterial({ color: 0x8b5a2b });
+    const pole = new THREE.Mesh(poleGeometry, poleMaterial);
+    pole.position.set(x + offsetX, 85, z + offsetZ);
+
+    // Create signboard (Bigger Size, Double-Sided)
+    const signGeometry = new THREE.PlaneGeometry(220, 110);
+
+    function createTextTexture(text) {
+        const canvas = document.createElement('canvas');
+        canvas.width = 512;
+        canvas.height = 256;
+        const ctx = canvas.getContext('2d');
+        ctx.fillStyle = 'black';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = 'white';
+        ctx.font = 'Bold 60px Arial';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(text, canvas.width / 2, canvas.height / 2);
+        return new THREE.CanvasTexture(canvas);
+    }
+
+    const texture = createTextTexture(text);
+    const signMaterial = new THREE.MeshBasicMaterial({ map: texture, side: THREE.DoubleSide });
+
+    const sign = new THREE.Mesh(signGeometry, signMaterial);
+    sign.position.set(x + offsetX, 150, z + offsetZ + 30);
+    sign.rotation.y = Math.PI / 6; // Adjust rotation for visibility
+
+    // Add to scene
+    scene.add(pole);
+    scene.add(sign);
+}
+
+// Add Signposts Next to Key Buildings
+createSignpost("City Center", -1900, -1700);
+createSignpost("Work Experience", 1400, -1900);
+createSignpost("School", 0, 2700);
+createSignpost("Skills Training", 2400, -1100);
+createSignpost("Small Building", -1900, 1700);
+
+// Now the signs should be correctly visible from both sides!
+
 // ✅ Lighting Setup (UNCHANGED)
 const ambientLight = new THREE.AmbientLight(0xffcc88, 3);
 scene.add(ambientLight);
