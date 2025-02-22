@@ -4,21 +4,21 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 
 // ✅ Create Scene
 const scene = new THREE.Scene();
-scene.background = new THREE.Color(0xffe0a7); // ✅ **Same color**
+scene.background = new THREE.Color(0xffe0a7); // ✅ Keeping same color
 
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.shadowMap.enabled = true;
 document.body.appendChild(renderer.domElement);
 
-// ✅ Create First-Person Camera
+// ✅ Create Third-Person Camera
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 5000);
-camera.position.set(0, 10, 0); // ✅ Camera inside the car
+camera.position.set(0, 50, -100); // ✅ Positioned behind the car
 
-// ✅ First-Person Controls (Like FPS Games)
+// ✅ Third-Person Controls (Mouse View Like Open-World Games)
 const controls = new PointerLockControls(camera, document.body);
 
-// ✅ Click to Activate First-Person Mode
+// ✅ Click to Activate Third-Person Mode
 document.addEventListener('click', () => {
     controls.lock();
 });
@@ -73,7 +73,7 @@ const buildings = [
     { modelPath: '/City_Building.glb', position: { x: -2000, z: -1800 }, scale: 600, rotation: 0.1 },
     { modelPath: '/Large Building.glb', position: { x: 1500, z: -2000 }, scale: 500, rotation: -0.3 },
     { modelPath: '/Low Building (1).glb', position: { x: -1200, z: 1800 }, scale: 550, rotation: 0.2 },
-    { modelPath: '', position: { x: -2000, z: -3000 }, scale: 1400, rotation: -0.2 },
+    { modelPath: '/moscow_state_university.glb', position: { x: -2000, z: -3000 }, scale: 1400, rotation: -0.2 },
     { modelPath: '/Small Building.glb', position: { x: -2000, z: 1600 }, scale: 600, rotation: 0.4 },
     { modelPath: '/Simple computer.glb', position: { x: 2500, z: -1200 }, scale: 650, rotation: -0.1 },
     { modelPath: '/Low Building.glb', position: { x: -2200, z: 1500 }, scale: 600, rotation: 0.3 },
@@ -105,19 +105,29 @@ buildings.forEach(({ modelPath, position, scale, rotation }) => {
     addModel(modelPath, position.x, position.z, scale, rotation);
 });
 
-// ✅ Car Model (Invisible, Used for Movement)
-const car = new THREE.Object3D();
-car.position.set(0, 10, 100);
+// ✅ Car Model (Now Visible)
+const carGeometry = new THREE.BoxGeometry(40, 25, 60);
+const carMaterial = new THREE.MeshStandardMaterial({ color: 0xff4444 });
+const car = new THREE.Mesh(carGeometry, carMaterial);
+car.position.set(0, 15, 100);
+car.castShadow = true;
 scene.add(car);
-camera.position.set(0, 5, 0);
-car.add(camera); // ✅ Attach Camera to Car for First-Person Mode
 
-// ✅ Smooth Car Controls (First-Person Mode)
+// ✅ Attach Camera Behind Car for Third-Person View
+const carFollowDistance = 150; // ✅ Distance behind the car
+function updateCameraPosition() {
+    camera.position.x = car.position.x - carFollowDistance * Math.sin(car.rotation.y);
+    camera.position.z = car.position.z - carFollowDistance * Math.cos(car.rotation.y);
+    camera.position.y = car.position.y + 50; // ✅ Slightly above the car
+    camera.lookAt(car.position.x, car.position.y + 20, car.position.z);
+}
+
+// ✅ Smooth Car Controls (Fixed Movement)
 let velocity = 0;
 const moveSpeed = 2;
 const maxSpeed = 15;
 const turnSpeed = 0.05;
-let carDirection = 0; // Rotation in radians
+let carDirection = Math.PI; // ✅ Corrected initial direction
 
 const keys = {
     ArrowUp: false,
@@ -139,21 +149,24 @@ window.addEventListener('keyup', (event) => {
     }
 });
 
-// ✅ Animation Loop (First-Person Driving)
+// ✅ Animation Loop (Fixed Car Movement)
 function animate() {
     requestAnimationFrame(animate);
 
-    // ✅ First-Person Movement
-    if (keys.ArrowUp && velocity < maxSpeed) velocity += 0.5;
-    if (keys.ArrowDown && velocity > -maxSpeed) velocity -= 0.5;
-    velocity *= 0.98;
+    // ✅ Corrected Car Movement
+    if (keys.ArrowUp && velocity < maxSpeed) velocity += 0.5; // ✅ Move FORWARD
+    if (keys.ArrowDown && velocity > -maxSpeed) velocity -= 0.5; // ✅ Move BACKWARD
+    velocity *= 0.98; // ✅ Friction (Smooth Stop)
 
-    car.position.x -= velocity * Math.sin(carDirection);
-    car.position.z -= velocity * Math.cos(carDirection);
+    car.position.x += velocity * Math.sin(carDirection);
+    car.position.z += velocity * Math.cos(carDirection);
 
-    if (keys.ArrowLeft) carDirection += turnSpeed;
-    if (keys.ArrowRight) carDirection -= turnSpeed;
+    if (keys.ArrowLeft) carDirection += turnSpeed; // ✅ Turn Left
+    if (keys.ArrowRight) carDirection -= turnSpeed; // ✅ Turn Right
     car.rotation.y = carDirection;
+
+    // ✅ Update Camera to Follow Car Correctly
+    updateCameraPosition();
 
     renderer.render(scene, camera);
 }
