@@ -1,5 +1,5 @@
 // main.js
-import { createScene } from './scene.js';
+import { createScene } from './scene-backup.js';
 import './style.css';
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -170,7 +170,7 @@ function fakeApiCall() {
 
 function initializeScene() {
     // ✅ Initialize Scene
-    const { scene, camera, renderer, controls, car, updateCameraPosition } = createScene();
+    const { scene, camera, renderer, controls, car, updateCameraPosition, animateFunction } = createScene();
 
     // ✅ Car Movement
     let velocity = 0;
@@ -202,6 +202,7 @@ function initializeScene() {
     // ✅ Animation Loop (Fixed Car Movement)
     function animate() {
         requestAnimationFrame(animate);
+        debugger;
 
         // ✅ Corrected Car Movement
         if (keys.ArrowUp && velocity < maxSpeed) velocity += 0.5; // ✅ Move FORWARD
@@ -221,6 +222,8 @@ function initializeScene() {
         renderer.render(scene, camera);
     }
     animate();
+
+    // animateFunction();
 
     // ✅ Handle Window Resize
     window.addEventListener('resize', () => {

@@ -159,5 +159,33 @@ function updateCameraPosition() {
 //     ArrowRight: false,
 // };
 
+    // ✅ Animation Loop (Fixed Car Movement)
+    // function animate() {
+    //     requestAnimationFrame(animate);
+
+    //     // ✅ Corrected Car Movement
+    //     if (keys.ArrowUp && velocity < maxSpeed) velocity += 0.5; // ✅ Move FORWARD
+    //     if (keys.ArrowDown && velocity > -maxSpeed) velocity -= 0.5; // ✅ Move BACKWARD
+    //     velocity *= 0.98; // ✅ Friction (Smooth Stop)
+
+    //     car.position.x += velocity * Math.sin(carDirection);
+    //     car.position.z += velocity * Math.cos(carDirection);
+
+    //     if (keys.ArrowLeft) carDirection += turnSpeed; // ✅ Turn Left
+    //     if (keys.ArrowRight) carDirection -= turnSpeed; // ✅ Turn Right
+    //     car.rotation.y = carDirection;
+
+    //     // ✅ Update Camera to Follow Car Correctly
+    //     updateCameraPosition();
+
+    //     renderer.render(scene, camera);
+    // }
+
+    // animateFunction()
+
     return { scene, camera, renderer, controls, car, updateCameraPosition };
+}
+
+function initCar() {
+    
 }
