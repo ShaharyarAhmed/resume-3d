@@ -71,12 +71,12 @@ treePositions.forEach(([x, z]) => createTree(x, z));
 // ✅ Placeholder for Different Models (UNCHANGED)
 const buildings = [
     { modelPath: '/City_Building.glb', position: { x: -2000, z: -1800 }, scale: 600, rotation: 0.1 },
-    { modelPath: '/Large Building.glb', position: { x: 1500, z: -2000 }, scale: 500, rotation: -0.3 },
-    { modelPath: '/Low Building (1).glb', position: { x: -1200, z: 1800 }, scale: 550, rotation: 0.2 },
-    { modelPath: '/moscow_state_university.glb', position: { x: -2000, z: -3000 }, scale: 1400, rotation: -0.2 },
+    { modelPath: '/work_building.glb', position: { x: 1500, z: -2000 }, scale: 500, rotation: -0.3 },
+    { modelPath: '/Small Building.glb', position: { x: -1200, z: 1800 }, scale: 550, rotation: 0.2 },
+    { modelPath: '/Education_building.glb', position: { x: -2000, z: -3000 }, scale: 1400, rotation: -0.2 },
     { modelPath: '/Small Building.glb', position: { x: -2000, z: 1600 }, scale: 600, rotation: 0.4 },
-    { modelPath: '/Simple computer.glb', position: { x: 2500, z: -1200 }, scale: 650, rotation: -0.1 },
-    { modelPath: '/Low Building.glb', position: { x: -2200, z: 1500 }, scale: 600, rotation: 0.3 },
+    { modelPath: '/skill_monitor.glb', position: { x: 2500, z: -1200 }, scale: 650, rotation: -0.1 },
+    { modelPath: '/work_building.glb', position: { x: -2200, z: 1500 }, scale: 600, rotation: 0.3 },
     { modelPath: '/Schoolhouse.glb', position: { x: 0, z: 2800 }, scale: 800, rotation: -0.3 }
 ];
 
