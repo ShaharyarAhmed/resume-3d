@@ -181,6 +181,21 @@ createText('Microsoft', -200, 20, 1100, 1.5, 0xffffff, 40);
 createText('Amazon', -200, 20, 1600, 1.5, 0xffffff, 40);
 createText('Apple', -200, 20, 2100, 1.5, 0xffffff, 40);
 
+createText('Skills', 600, 20, 1500, 0.5, 0x000000, 80);
+
+function createTextList(textList, startX, startY, startZ, spacing) {
+    textList.forEach((text, index) => {
+        const x = startX;
+        const y = startY;
+        const z = startZ + index * spacing; // Adjust z position for equal spacing
+        createText(text, x, y, z, 0, 0xffffff, 40);
+    });
+}
+
+// Example Usage:
+const skills = ['nodejs', 'javascript', 'react', 'threejs', 'mysql', 'elasticsearch', 'rabbitmq', 'docker']
+createTextList(skills, 200, 20, 300, 300);
+
 
 // ✅ Placeholder for Different Models (UNCHANGED)
 const buildings = [
@@ -224,14 +239,14 @@ buildings.forEach(({ modelPath, position, scale, rotation }) => {
 });
 
 // ✅ Car Model (Now Visible)
-const carLoader = new GLTFLoader();
-let car;
-carLoader.load('/airplane.glb', function (gltf) {
-    car = gltf.scene;
-    car.scale.set(10, 10, 10);
-    car.position.set(0, 50, 100);
-    car.castShadow = true;
-    scene.add(car);
+const airplaneLoader = new GLTFLoader();
+let airplane;
+airplaneLoader.load('/airplane.glb', function (gltf) {
+    airplane = gltf.scene;
+    airplane.scale.set(10, 10, 10);
+    airplane.position.set(0, 80, 100);
+    airplane.castShadow = true;
+    scene.add(airplane);
 }, undefined, function (error) {
     console.error('Error loading the car model:', error);
 });
@@ -239,10 +254,10 @@ carLoader.load('/airplane.glb', function (gltf) {
 // ✅ Attach Camera Behind Car for Third-Person View
 const carFollowDistance = 150; // ✅ Distance behind the car
 function updateCameraPosition() {
-    camera.position.x = car.position.x - carFollowDistance * Math.sin(car.rotation.y);
-    camera.position.z = car.position.z - carFollowDistance * Math.cos(car.rotation.y);
-    camera.position.y = car.position.y + 100; // ✅ Slightly above the car
-    camera.lookAt(car.position.x, car.position.y + 20, car.position.z);
+    camera.position.x = airplane.position.x - carFollowDistance * Math.sin(airplane.rotation.y);
+    camera.position.z = airplane.position.z - carFollowDistance * Math.cos(airplane.rotation.y);
+    camera.position.y = airplane.position.y + 100; // ✅ Slightly above the car
+    camera.lookAt(airplane.position.x, airplane.position.y + 20, airplane.position.z);
 }
 
 // ✅ Smooth Car Controls (Fixed Movement)
@@ -281,12 +296,12 @@ function animate() {
     if (keys.ArrowDown && velocity > -maxSpeed) velocity -= 0.5; // ✅ Move BACKWARD
     velocity *= 0.98; // ✅ Friction (Smooth Stop)
 
-    car.position.x += velocity * Math.sin(carDirection);
-    car.position.z += velocity * Math.cos(carDirection);
+    airplane.position.x += velocity * Math.sin(carDirection);
+    airplane.position.z += velocity * Math.cos(carDirection);
 
     if (keys.ArrowLeft) carDirection += turnSpeed; // ✅ Turn Left
     if (keys.ArrowRight) carDirection -= turnSpeed; // ✅ Turn Right
-    car.rotation.y = carDirection;
+    airplane.rotation.y = carDirection;
 
     // ✅ Update Camera to Follow Car Correctly
     updateCameraPosition();
