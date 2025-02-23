@@ -4,7 +4,7 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js';
 import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js';
 
-export async function createScene() {
+export async function createScene(allSkill, allWorkExperience, allEducation) {
 
     // ✅ Create Scene
     const scene = new THREE.Scene();
@@ -194,10 +194,7 @@ export async function createScene() {
         });
     }
 
-    // Example Usage:
-    const skills = ['nodejs', 'javascript', 'react', 'threejs', 'mysql', 'elasticsearch', 'rabbitmq', 'docker']
-    createTextList(skills, 200, 20, 300, 300);
-
+    createTextList(allSkill, 200, 20, 300, 300);
 
     // ✅ Placeholder for Different Models (UNCHANGED)
     const buildings = [
@@ -212,7 +209,6 @@ export async function createScene() {
         { modelPath: '/work_building3.glb', position: { x: -500, y: 700, z: 1000 }, scale: 900, rotation: -3 },
         { modelPath: '/work_building4.glb', position: { x: -500, y: 0, z: 1500 }, scale: 600, rotation: 1.5 },
         { modelPath: '/work_building1.glb', position: { x: -500, y: 10, z: 2000 }, scale: 700, rotation: 1.5 },
-
     ];
 
     // ✅ Load Models (UNCHANGED)
