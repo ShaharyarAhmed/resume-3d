@@ -2,28 +2,122 @@ import { createScene } from './scene.js';
 import './style.css';
 
 document.addEventListener('DOMContentLoaded', () => {
+    // Create main container
     const container = document.createElement('div');
     container.style.display = 'flex';
     container.style.flexDirection = 'column';
     container.style.alignItems = 'center';
     container.style.justifyContent = 'center';
     container.style.height = '100vh';
+    container.style.width = '100vw';
+    container.style.background = 'linear-gradient(135deg, #FF7E5F, #FFB88C)';
+    container.style.fontFamily = "'Poppins', sans-serif";
 
-    // File Input
+    // Create Heading
+    const heading = document.createElement('h1');
+    heading.innerText = 'Resume Visualization';
+    heading.style.fontSize = '42px';
+    heading.style.color = '#fff';
+    heading.style.fontWeight = '700';
+    heading.style.marginBottom = '20px';
+    heading.style.textShadow = '2px 2px 10px rgba(0, 0, 0, 0.3)';
+    heading.style.letterSpacing = '2px';
+
+    // Card Container
+    const card = document.createElement('div');
+    card.style.background = '#ffffff';
+    card.style.padding = '30px';
+    card.style.borderRadius = '12px';
+    card.style.boxShadow = '0px 10px 30px rgba(0, 0, 0, 0.1)';
+    card.style.display = 'flex';
+    card.style.flexDirection = 'column';
+    card.style.alignItems = 'center';
+    card.style.justifyContent = 'center';
+    card.style.width = '350px';
+    card.style.textAlign = 'center';
+
+    // Title
+    const title = document.createElement('h2');
+    title.innerText = 'Upload Your Resume';
+    title.style.color = '#333';
+    title.style.marginBottom = '15px';
+    title.style.fontWeight = '600';
+
+    // File Input Wrapper (Styled as a Button)
+    const fileInputWrapper = document.createElement('label');
+    fileInputWrapper.style.display = 'inline-block';
+    fileInputWrapper.style.padding = '12px 20px';
+    fileInputWrapper.style.backgroundColor = '#FF5E3A';
+    fileInputWrapper.style.color = '#fff';
+    fileInputWrapper.style.borderRadius = '6px';
+    fileInputWrapper.style.cursor = 'pointer';
+    fileInputWrapper.style.fontSize = '14px';
+    fileInputWrapper.style.marginBottom = '15px';
+    fileInputWrapper.style.transition = '0.3s ease-in-out';
+    fileInputWrapper.style.boxShadow = '0px 4px 6px rgba(0, 0, 0, 0.1)';
+    fileInputWrapper.innerText = 'Choose File';
+
+    fileInputWrapper.onmouseover = () => {
+        fileInputWrapper.style.backgroundColor = '#E64A19';
+        fileInputWrapper.style.transform = 'scale(1.05)';
+    };
+    fileInputWrapper.onmouseleave = () => {
+        fileInputWrapper.style.backgroundColor = '#FF5E3A';
+        fileInputWrapper.style.transform = 'scale(1)';
+    };
+
+    // Hidden File Input
     const fileInput = document.createElement('input');
     fileInput.type = 'file';
     fileInput.accept = '.pdf,.doc,.docx';
-    fileInput.style.marginBottom = '20px';
+    fileInput.style.display = 'none';
+
+    fileInput.addEventListener('change', () => {
+        fileInputWrapper.innerText = fileInput.files.length ? fileInput.files[0].name : 'Choose File';
+    });
+
+    fileInputWrapper.appendChild(fileInput);
 
     // Upload Button
     const uploadButton = document.createElement('button');
-    uploadButton.innerText = 'Upload Resume & Start Scene';
-    uploadButton.style.padding = '10px 20px';
+    uploadButton.innerText = 'Get Your Visualized Resume'; // Updated text here
+    uploadButton.style.padding = '12px 20px';
     uploadButton.style.fontSize = '16px';
     uploadButton.style.cursor = 'pointer';
+    uploadButton.style.border = 'none';
+    uploadButton.style.borderRadius = '6px';
+    uploadButton.style.background = '#FF7E5F';
+    uploadButton.style.color = '#fff';
+    uploadButton.style.transition = '0.3s ease-in-out';
+    uploadButton.style.width = '100%';
+    uploadButton.style.marginTop = '10px';
+    uploadButton.style.boxShadow = '0px 4px 6px rgba(0, 0, 0, 0.1)';
 
-    container.appendChild(fileInput);
-    container.appendChild(uploadButton);
+    uploadButton.onmouseover = () => {
+        uploadButton.style.background = '#E64A19';
+        uploadButton.style.transform = 'scale(1.05)';
+        uploadButton.style.boxShadow = '0px 6px 10px rgba(0, 0, 0, 0.15)';
+    };
+    uploadButton.onmouseleave = () => {
+        uploadButton.style.background = '#FF7E5F';
+        uploadButton.style.transform = 'scale(1)';
+        uploadButton.style.boxShadow = '0px 4px 6px rgba(0, 0, 0, 0.1)';
+    };
+
+    uploadButton.onmousedown = () => {
+        uploadButton.style.transform = 'scale(0.95)';
+    };
+
+    uploadButton.onmouseup = () => {
+        uploadButton.style.transform = 'scale(1.05)';
+    };
+
+    // Append elements
+    container.appendChild(heading);
+    card.appendChild(title);
+    card.appendChild(fileInputWrapper);
+    card.appendChild(uploadButton);
+    container.appendChild(card);
     document.body.appendChild(container);
 
     uploadButton.addEventListener('click', async () => {
@@ -34,7 +128,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         uploadButton.disabled = true;
-        uploadButton.innerText = 'Uploading...';
+        uploadButton.innerText = 'Generating...'; // Updated text here
+        uploadButton.style.background = '#C62828';
 
         try {
             const responseData = await uploadResume(file);
@@ -44,10 +139,12 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('Error uploading resume:', error);
             alert('Failed to upload resume. Try again.');
             uploadButton.disabled = false;
-            uploadButton.innerText = 'Upload Resume & Start Scene';
+            uploadButton.innerText = 'Get Your Visualized Resume'; // Reset text here
+            uploadButton.style.background = '#FF7E5F';
         }
     });
 });
+
 
 async function uploadResume(file) {
     const formData = new FormData();
