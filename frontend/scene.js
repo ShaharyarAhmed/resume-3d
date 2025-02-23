@@ -123,7 +123,7 @@ export async function createScene(allSkill, allWorkExperience, allEducation) {
     const directionalLight = new THREE.DirectionalLight(0xffffff, 4);
     directionalLight.position.set(200, 600, 200);
     directionalLight.castShadow = true;
-    
+
     scene.add(directionalLight);
 
     // ✅ Function to Add Bigger Trees (UNCHANGED)
@@ -143,9 +143,40 @@ export async function createScene(allSkill, allWorkExperience, allEducation) {
     }
 
     // ✅ Add Trees (UNCHANGED)
-    const treePositions = [
-        [-1000, -700], [800, 1000], [-900, 850], [1200, -1300], [500, 1500], [-1400, 400], [1100, -1200]
-    ];
+    const treePositions = [];
+
+    const max = 5000;
+
+    function areTreesTooClose(x, z, treePositions, minDistance) {
+        for (const [tx, tz] of treePositions) {
+            const distance = Math.sqrt((x - tx) ** 2 + (z - tz) ** 2);
+            if (distance < minDistance) {
+                return true; // Too close to an existing tree
+            }
+        }
+        return false;
+    }
+
+    for (let index = 0; index < 40; index++) { 
+        let randomX, randomZ;
+        let attempts = 0;
+        const maxAttempts = 20; // Prevent infinite loops
+    
+        do {
+            randomX = Math.floor(Math.random() * (2 * max)) - max;
+            randomZ = Math.floor(Math.random() * (1.8 * max)) - (max * 0.9);
+            attempts++;
+        } while (
+            isInExclusionZone(randomX, randomZ) || 
+            areTreesTooClose(randomX, randomZ, treePositions, 150) && 
+            attempts < maxAttempts
+        );
+    
+        if (attempts < maxAttempts) {
+            treePositions.push([randomX, randomZ]);
+        }
+    }
+
     treePositions.forEach(([x, z]) => createTree(x, z));
 
     // ✅ Adding 3D Text
@@ -284,6 +315,40 @@ export async function createScene(allSkill, allWorkExperience, allEducation) {
     // };
 
     return { scene, camera, renderer, controls, airplane, updateCameraPosition };
+}
+
+function isInExclusionZone(x, z) {
+    // Define exclusion zones (adjust these based on actual sizes)
+    const roads = [
+        { x: 0, z: 0, width: 8000, height: 200 }, // Horizontal road
+        { x: 0, z: 0, width: 200, height: 8000 }  // Vertical road
+    ];
+    
+    const buildings = [
+        { x: -500, z: -500, size: 600 },
+        { x: -500, z: -1000, size: 500 },
+        { x: -500, z: -1500, size: 700 },
+        { x: -500, z: 500, size: 800 },
+        { x: -500, z: 1000, size: 900 },
+        { x: -500, z: 1500, size: 700 },
+        { x: -500, z: 2000, size: 800 }
+    ];
+
+    // Check if inside a road
+    for (const road of roads) {
+        if (Math.abs(x - road.x) < road.width / 2 && Math.abs(z - road.z) < road.height / 2) {
+            return true;
+        }
+    }
+
+    // Check if inside a building
+    for (const building of buildings) {
+        if (Math.abs(x - building.x) < building.size / 2 && Math.abs(z - building.z) < building.size / 2) {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 // // ✅ Listen for Key Presses
