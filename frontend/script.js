@@ -188,12 +188,14 @@ const buildings = [
     { modelPath: '/school_building.glb', position: { x: -500, y: 0, z: -500 }, scale: 500, rotation: 0.0 },
     { modelPath: '/college_building.glb', position: { x: -500, y: 0, z: -1000 }, scale: 400, rotation: -1.5 },
     { modelPath: '/university_building2.glb', position: { x: -500, y: 0, z: -1500 }, scale: 600, rotation: 1.5 },
+    // { modelPath: '/paper_airplane2.glb', position: { x: -500, y: 0, z: 0 }, scale: 700, rotation: 1.5 },
 
     // Work
     { modelPath: '/work_building1.glb', position: { x: -500, y: 0, z: 500 }, scale: 700, rotation: 1.5 },
     { modelPath: '/work_building3.glb', position: { x: -500, y: 700, z: 1000 }, scale: 900, rotation: -3 },
     { modelPath: '/work_building4.glb', position: { x: -500, y: 0, z: 1500 }, scale: 600, rotation: 1.5 },
-    { modelPath: '/work_building1.glb', position: { x: -500, y: 0, z: 2000 }, scale: 700, rotation: 1.5 },
+    { modelPath: '/work_building1.glb', position: { x: -500, y: 10, z: 2000 }, scale: 700, rotation: 1.5 },
+    
 ];
 
 // ✅ Load Models (UNCHANGED)
@@ -222,20 +224,24 @@ buildings.forEach(({ modelPath, position, scale, rotation }) => {
 });
 
 // ✅ Car Model (Now Visible)
-const carGeometry = new THREE.BoxGeometry(40, 25, 60);
-const carMaterial = new THREE.MeshStandardMaterial({ color: 0xff4444 });
-const car = new THREE.Mesh(carGeometry, carMaterial);
-
-car.position.set(0, 15, 100);
-car.castShadow = true;
-scene.add(car);
+const carLoader = new GLTFLoader();
+let car;
+carLoader.load('/airplane.glb', function (gltf) {
+    car = gltf.scene;
+    car.scale.set(10, 10, 10);
+    car.position.set(0, 50, 100);
+    car.castShadow = true;
+    scene.add(car);
+}, undefined, function (error) {
+    console.error('Error loading the car model:', error);
+});
 
 // ✅ Attach Camera Behind Car for Third-Person View
 const carFollowDistance = 150; // ✅ Distance behind the car
 function updateCameraPosition() {
     camera.position.x = car.position.x - carFollowDistance * Math.sin(car.rotation.y);
     camera.position.z = car.position.z - carFollowDistance * Math.cos(car.rotation.y);
-    camera.position.y = car.position.y + 20; // ✅ Slightly above the car
+    camera.position.y = car.position.y + 100; // ✅ Slightly above the car
     camera.lookAt(car.position.x, car.position.y + 20, car.position.z);
 }
 
