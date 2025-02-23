@@ -111,14 +111,45 @@ export async function createScene(allSkill, allWorkExperience, allEducation) {
 
     // ✅ Adding Cross Roads with Junction
     function createRoad(x, z, width, height, rotation = 0) {
+        // Road Surface
         const roadGeometry = new THREE.PlaneGeometry(width, height);
         const roadMaterial = new THREE.MeshStandardMaterial({ color: 0x222222 });
         const road = new THREE.Mesh(roadGeometry, roadMaterial);
         road.rotation.x = -Math.PI / 2;
-        road.position.set(x, 4, z); // height is 4
+        road.position.set(x, 4, z);
         road.rotation.z = rotation;
         scene.add(road);
+    
+        // Add Road Markings
+        createRoadMarkings(x, z, width, height, rotation);
     }
+    
+
+    function createRoadMarkings(x, z, width, height, rotation) {
+        const markingLength = 100;
+        const markingSpacing = 200;
+        const markingWidth = 10;
+        const numMarkings = Math.floor((width > height ? width : height) / (markingLength + markingSpacing));
+    
+        for (let i = -numMarkings / 2; i < numMarkings / 2; i++) {
+            const markingGeometry = new THREE.PlaneGeometry(markingLength, markingWidth);
+            const markingMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, side: THREE.DoubleSide });
+    
+            const marking = new THREE.Mesh(markingGeometry, markingMaterial);
+            marking.rotation.x = -Math.PI / 2; // Keep the markings flat on the ground
+    
+            if (width > height) {
+                // Horizontal Road: markings should align along the Z-axis
+                marking.position.set(x + i * (markingLength + markingSpacing), 5, z);
+            } else {
+                // Vertical Road: markings should align along the X-axis
+                marking.rotation.z = Math.PI / 2; // Rotate markings to align properly
+                marking.position.set(x, 5, z + i * (markingLength + markingSpacing));
+            }
+    
+            scene.add(marking);
+        }
+    }    
 
     // Creating roads in a cross pattern
     createRoad(0, 0, 15000, 200); // Horizontal Road
