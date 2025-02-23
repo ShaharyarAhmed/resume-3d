@@ -24,7 +24,7 @@ class WorkExperienceData(BaseModel):
     company: str
     position: str
     start_date: str
-    end_date: str
+    end_date: Optional[str]
 
 class ResumeData(BaseModel):
     person: PersonData

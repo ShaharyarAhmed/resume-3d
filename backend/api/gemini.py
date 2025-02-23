@@ -1,5 +1,4 @@
-import random
-import string
+import json
 from pathlib import Path
 from google.genai import Client
 from decouple import config
@@ -84,6 +83,8 @@ class GeminiClient():
 
         All dates should be POSIX timesamp seconds in the json and education type should be consistant.
 
+        If the field is optional and it does not exist in the CV, return "null" WITHOUT speechmarks.
+
         --- where the resume starts ---\n
         {resume_string}
         """
@@ -97,12 +98,12 @@ class GeminiClient():
 
         print(f"response --> {response.text}")
 
-        data: ResumeData = {
-            "person": {
-                "first_name": "Jassim",
-                "last_name": "Saleh"
-            }
-        }
+        return self.__parse_ai_json_response_to_actual_dict(response.text)
+
+    def __parse_ai_json_response_to_actual_dict(self, ai_response_string: str) -> ResumeData:
+        response_string = ai_response_string.replace("```json", "").replace("```", "")
+
+        data = json.loads(response_string)
 
         return data
 
