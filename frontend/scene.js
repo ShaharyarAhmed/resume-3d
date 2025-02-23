@@ -76,7 +76,7 @@ function getEducationModels(allEducation) {
     return outputBuildings;
 }
 
-export async function createScene(allSkill, allWorkExperience, allEducation) {
+export async function createScene(allSkill, allWorkExperience, allEducation, basicInfo) {
 
     // ✅ Create Scene
     const scene = new THREE.Scene();
@@ -270,6 +270,7 @@ export async function createScene(allSkill, allWorkExperience, allEducation) {
     // createText('Apple', -200, 20, 2100, 1.5, 0xffffff, 40);
 
     createText('Skills', 600, 20, 1500, 0.5, 0x000000, 80);
+    createText(basicInfo.full_name, 600, 20, -900, 0.5, 0x000000, 150);
 
     function createTextList(textList, startX, startY, startZ, spacing) {
         textList.forEach((text, index) => {

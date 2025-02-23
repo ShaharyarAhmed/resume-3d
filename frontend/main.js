@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Create Heading
     const heading = document.createElement('h1');
-    heading.innerText = 'Resume Visualization';
+    heading.innerText = '3D Resume Visualization';
     heading.style.fontSize = '42px';
     heading.style.color = '#fff';
     heading.style.fontWeight = '700';
@@ -195,7 +195,7 @@ async function initializeScene(data) {
     const allWorkExperience = data.work_experience;
     const allEducation = data.education;
 
-    const { scene, camera, renderer, controls, airplane, updateCameraPosition } = await createScene(allSkill, allWorkExperience, allEducation);
+    const { scene, camera, renderer, controls, airplane, updateCameraPosition } = await createScene(allSkill, allWorkExperience, allEducation, data.person);
 
     let velocity = 0;
     const moveSpeed = 2;
