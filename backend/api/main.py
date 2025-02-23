@@ -3,7 +3,6 @@ from fastapi.responses import JSONResponse
 from fastapi.exceptions import HTTPException
 from pydantic import BaseModel
 import pymupdf
-from io import TextIOWrapper, BytesIO
 
 from .gemini import GeminiClient
 

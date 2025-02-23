@@ -89,14 +89,12 @@ class GeminiClient():
         {resume_string}
         """
 
+        print("Parsing resume to json data with gemini...")
+
         response = self.client.models.generate_content(
             model = "gemini-2.0-flash",
             contents = prompt
         )
-
-        # TODO: parse json data from gemini response, bloddy hell this is gonna be pain! 😭
-
-        print(f"response --> {response.text}")
 
         return self.__parse_ai_json_response_to_actual_dict(response.text)
 
