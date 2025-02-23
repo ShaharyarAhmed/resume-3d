@@ -1,5 +1,5 @@
 // main.js
-import { createScene } from './scene-backup.js';
+import { createScene } from './scene.js';
 import './style.css';
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
         fakeApiCall().then((data) => {
             document.body.innerHTML = '';
             // initScene(data);
-            initializeScene();
+            initializeScene(data);
         });
     });
 });
@@ -168,16 +168,22 @@ function fakeApiCall() {
     });
 }
 
-function initializeScene() {
+async function initializeScene(data) {
+    console.log(data);
+
+    const allSkill = data.skills;
+    const allWorkExperience = data.work_experience;
+    const allEducation = data.education;
+
     // ✅ Initialize Scene
-    const { scene, camera, renderer, controls, car, updateCameraPosition, animateFunction } = createScene();
+    const { scene, camera, renderer, controls, airplane, updateCameraPosition } = await createScene(allSkill, allWorkExperience, allEducation);
 
     // ✅ Car Movement
     let velocity = 0;
     const moveSpeed = 2;
     const maxSpeed = 15;
     const turnSpeed = 0.05;
-    let carDirection = Math.PI;
+    let airplaneDirection = Math.PI;
 
     const keys = {
         ArrowUp: false,
@@ -202,19 +208,18 @@ function initializeScene() {
     // ✅ Animation Loop (Fixed Car Movement)
     function animate() {
         requestAnimationFrame(animate);
-        debugger;
 
         // ✅ Corrected Car Movement
         if (keys.ArrowUp && velocity < maxSpeed) velocity += 0.5; // ✅ Move FORWARD
         if (keys.ArrowDown && velocity > -maxSpeed) velocity -= 0.5; // ✅ Move BACKWARD
         velocity *= 0.98; // ✅ Friction (Smooth Stop)
 
-        car.position.x += velocity * Math.sin(carDirection);
-        car.position.z += velocity * Math.cos(carDirection);
+        airplane.position.x += velocity * Math.sin(airplaneDirection);
+        airplane.position.z += velocity * Math.cos(airplaneDirection);
 
-        if (keys.ArrowLeft) carDirection += turnSpeed; // ✅ Turn Left
-        if (keys.ArrowRight) carDirection -= turnSpeed; // ✅ Turn Right
-        car.rotation.y = carDirection;
+        if (keys.ArrowLeft) airplaneDirection += turnSpeed; // ✅ Turn Left
+        if (keys.ArrowRight) airplaneDirection -= turnSpeed; // ✅ Turn Right
+        airplane.rotation.y = airplaneDirection;
 
         // ✅ Update Camera to Follow Car Correctly
         updateCameraPosition();

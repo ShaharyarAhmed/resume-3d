@@ -127,7 +127,6 @@ treePositions.forEach(([x, z]) => createTree(x, z));
        addModel(modelPath, position.x, position.z, scale, rotation);
    });
 
-
    // ✅ Car Model (Now Visible)
    const carGeometry = new THREE.BoxGeometry(40, 25, 60);
    const carMaterial = new THREE.MeshStandardMaterial({ color: 0xff4444 });
