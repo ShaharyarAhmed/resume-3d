@@ -126,11 +126,35 @@ document.addEventListener('DOMContentLoaded', () => {
             alert('Please select a resume file.');
             return;
         }
-
+    
+        // Disable button and clear text
         uploadButton.disabled = true;
-        uploadButton.innerText = 'Generating...'; // Updated text here
+        uploadButton.innerHTML = ''; // Clear existing text
+    
+        // Create Spinner Element
+        const spinner = document.createElement('div');
+        spinner.style.border = '4px solid rgba(255, 255, 255, 0.3)';
+        spinner.style.borderTop = '4px solid #fff';
+        spinner.style.borderRadius = '50%';
+        spinner.style.width = '24px';
+        spinner.style.height = '24px';
+        spinner.style.animation = 'spin 1s linear infinite';
+        spinner.style.margin = 'auto';
+    
+        // Add Spinner to Button
+        uploadButton.appendChild(spinner);
         uploadButton.style.background = '#C62828';
-
+    
+        // CSS for Spinner Animation
+        const style = document.createElement('style');
+        style.innerHTML = `
+            @keyframes spin {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+            }
+        `;
+        document.head.appendChild(style);
+    
         try {
             const responseData = await uploadResume(file);
             document.body.innerHTML = ''; // Clear the page
@@ -138,12 +162,16 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (error) {
             console.error('Error uploading resume:', error);
             alert('Failed to upload resume. Try again.');
+    
+            // Reset Button
             uploadButton.disabled = false;
-            uploadButton.innerText = 'Get Your Visualized Resume'; // Reset text here
+            uploadButton.innerHTML = 'Get Your Visualized Resume'; // Reset text
             uploadButton.style.background = '#FF7E5F';
         }
     });
-});
+    
+    });
+
 
 
 async function uploadResume(file) {
