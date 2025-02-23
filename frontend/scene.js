@@ -10,6 +10,9 @@ export async function createScene() {
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(0xffe0a7); // ✅ Keeping same color
 
+    scene.fog = new THREE.Fog(0xe8a87c, 50, 2500);
+
+
     const renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.shadowMap.enabled = true;
@@ -27,11 +30,7 @@ export async function createScene() {
         controls.lock();
     });
 
-    // ✅ Large Soft Gradient Skybox (UNCHANGED)
-    const skyGeometry = new THREE.SphereGeometry(8000, 32, 32);
-    const skyMaterial = new THREE.MeshBasicMaterial({ color: 0xffd79a, side: THREE.BackSide });
-    const sky = new THREE.Mesh(skyGeometry, skyMaterial);
-    scene.add(sky);
+
 
     // ✅ Large Ground (Keeping the Original Color)
     const groundGeometry = new THREE.PlaneGeometry(10000, 10000);
@@ -124,6 +123,7 @@ export async function createScene() {
     const directionalLight = new THREE.DirectionalLight(0xffffff, 4);
     directionalLight.position.set(200, 600, 200);
     directionalLight.castShadow = true;
+    
     scene.add(directionalLight);
 
     // ✅ Function to Add Bigger Trees (UNCHANGED)
