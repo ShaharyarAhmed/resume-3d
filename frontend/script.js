@@ -1,6 +1,8 @@
 import * as THREE from 'three';
 import { PointerLockControls } from 'three/examples/jsm/controls/PointerLockControls.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js';
+import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js';
 
 // ✅ Create Scene
 const scene = new THREE.Scene();
@@ -49,8 +51,8 @@ function createRoad(x, z, width, height, rotation = 0) {
 }
 
 // Creating roads in a cross pattern
-createRoad(0, 0, 2000, 200); // Horizontal Road
-createRoad(0, 0, 200, 2000); // Vertical Road
+createRoad(0, 0, 8000, 200); // Horizontal Road
+createRoad(0, 0, 200, 8000); // Vertical Road
 // createRoad(0, 0, 400, 400); // Junction
 
 // ✅ Function to Add Rocks
@@ -106,11 +108,10 @@ function createSignpost(text, x, z, offsetX = 250, offsetZ = 250) {
 }
 
 // Add Signposts Next to Key Buildings
-createSignpost("City Center", -1900, -1700);
 createSignpost("Work Experience", 1400, -1900);
-createSignpost("School", 0, 2700);
-createSignpost("Skills Training", 2400, -1100);
-createSignpost("Small Building", -1900, 1700);
+createSignpost("Education", 0, 2700);
+createSignpost("Projects", 2400, -1100);
+createSignpost("Skills", -1900, 1700);
 
 // Now the signs should be correctly visible from both sides!
 
@@ -145,21 +146,59 @@ const treePositions = [
 ];
 treePositions.forEach(([x, z]) => createTree(x, z));
 
+// ✅ Adding 3D Text
+function createText(text, x, y, z, rotation = 0, color = 0xFFFFFF, size = 100) {
+    const loader = new FontLoader();
+    loader.load('https://threejs.org/examples/fonts/optimer_regular.typeface.json', function (font) {
+        const textGeometry = new TextGeometry(text, {
+            font: font,
+            size: size,
+            font: font,
+            depth: 3,
+            size: size,
+            height: 10,
+            curveSegments: 12,
+            bevelEnabled: true,
+            bevelThickness: 5,
+            bevelSize: 3,
+            bevelSegments: 5,
+        });
+        const textMaterial = new THREE.MeshStandardMaterial({ color: color });
+        const textMesh = new THREE.Mesh(textGeometry, textMaterial);
+        textMesh.position.set(x, y, z);
+        textMesh.castShadow = true;
+        textMesh.rotation.y = rotation;
+        scene.add(textMesh);
+    });
+}
+
+createText('School', -200, 20, -400, 1.5, 0xffffff, 40);
+createText('College', -200, 20, -900, 1.5, 0xffffff, 40);
+createText('University', -200, 20, -1400, 1.5, 0xffffff, 40);
+
+createText('Google', -200, 20, 600, 1.5, 0xffffff, 40);
+createText('Microsoft', -200, 20, 1100, 1.5, 0xffffff, 40);
+createText('Amazon', -200, 20, 1600, 1.5, 0xffffff, 40);
+createText('Apple', -200, 20, 2100, 1.5, 0xffffff, 40);
+
+
 // ✅ Placeholder for Different Models (UNCHANGED)
 const buildings = [
-    { modelPath: '/City_Building.glb', position: { x: -2000, z: -1800 }, scale: 600, rotation: 0.1 },
-    { modelPath: '/work_building.glb', position: { x: 1500, z: -2000 }, scale: 500, rotation: -0.3 },
-    { modelPath: '/Small Building.glb', position: { x: -1200, z: 1800 }, scale: 550, rotation: 0.2 },
-    { modelPath: '/Education_building.glb', position: { x: -2000, z: -3000 }, scale: 1400, rotation: -0.2 },
-    { modelPath: '/Small Building.glb', position: { x: -2000, z: 1600 }, scale: 600, rotation: 0.4 },
-    { modelPath: '/skill_monitor.glb', position: { x: 2500, z: -1200 }, scale: 650, rotation: -0.1 },
-    { modelPath: '/work_building.glb', position: { x: -2200, z: 1500 }, scale: 600, rotation: 0.3 },
-    { modelPath: '/Schoolhouse.glb', position: { x: 0, z: 2800 }, scale: 800, rotation: -0.3 }
+    // Education
+    { modelPath: '/school_building.glb', position: { x: -500, y: 0, z: -500 }, scale: 500, rotation: 0.0 },
+    { modelPath: '/college_building.glb', position: { x: -500, y: 0, z: -1000 }, scale: 400, rotation: -1.5 },
+    { modelPath: '/university_building2.glb', position: { x: -500, y: 0, z: -1500 }, scale: 600, rotation: 1.5 },
+
+    // Work
+    { modelPath: '/work_building1.glb', position: { x: -500, y: 0, z: 500 }, scale: 700, rotation: 1.5 },
+    { modelPath: '/work_building3.glb', position: { x: -500, y: 700, z: 1000 }, scale: 900, rotation: -3 },
+    { modelPath: '/work_building4.glb', position: { x: -500, y: 0, z: 1500 }, scale: 600, rotation: 1.5 },
+    { modelPath: '/work_building1.glb', position: { x: -500, y: 0, z: 2000 }, scale: 700, rotation: 1.5 },
 ];
 
 // ✅ Load Models (UNCHANGED)
 const loader = new GLTFLoader();
-function addModel(modelPath, x, z, scale, rotation) {
+function addModel(modelPath, x, y, z, scale, rotation) {
     loader.load(modelPath, function (gltf) {
         const model = gltf.scene;
         const bbox = new THREE.Box3().setFromObject(model);
@@ -167,7 +206,7 @@ function addModel(modelPath, x, z, scale, rotation) {
         const scaleFactor = scale / size;
 
         model.scale.set(scaleFactor, scaleFactor, scaleFactor);
-        model.position.set(x, 0, z);
+        model.position.set(x, y, z);
         model.rotation.y = rotation;
         model.castShadow = true;
 
@@ -179,13 +218,14 @@ function addModel(modelPath, x, z, scale, rotation) {
 
 // ✅ Import Models
 buildings.forEach(({ modelPath, position, scale, rotation }) => {
-    addModel(modelPath, position.x, position.z, scale, rotation);
+    addModel(modelPath, position.x, position.y, position.z, scale, rotation);
 });
 
 // ✅ Car Model (Now Visible)
 const carGeometry = new THREE.BoxGeometry(40, 25, 60);
 const carMaterial = new THREE.MeshStandardMaterial({ color: 0xff4444 });
 const car = new THREE.Mesh(carGeometry, carMaterial);
+
 car.position.set(0, 15, 100);
 car.castShadow = true;
 scene.add(car);
@@ -195,7 +235,7 @@ const carFollowDistance = 150; // ✅ Distance behind the car
 function updateCameraPosition() {
     camera.position.x = car.position.x - carFollowDistance * Math.sin(car.rotation.y);
     camera.position.z = car.position.z - carFollowDistance * Math.cos(car.rotation.y);
-    camera.position.y = car.position.y + 50; // ✅ Slightly above the car
+    camera.position.y = car.position.y + 20; // ✅ Slightly above the car
     camera.lookAt(car.position.x, car.position.y + 20, car.position.z);
 }
 
