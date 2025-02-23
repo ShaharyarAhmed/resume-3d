@@ -24,8 +24,17 @@ export function createPath(start, end) {
  */
 export async function submitResume(resumeFile) {
     // TODO: Actually submit a file.
+    const formData = new FormData();
+
+    formData.append("resume_file", resumeFile);
+
+    // Add a text field
+    formData.append("name", "Pomegranate");
     const respose = await fetch(
-        `${API_HOST}/resume`, {method: "POST"}
+        `${API_HOST}/resume`, {
+            method: "POST",
+            body: resumeFile
+        }
     );
 
     console.log(await respose.json());
