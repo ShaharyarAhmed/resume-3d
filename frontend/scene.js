@@ -154,49 +154,49 @@ export async function createScene(allSkill, allWorkExperience, allEducation) {
     ];
     rockPositions.forEach(([x, z]) => createRock(x, z));
 
-    // ✅ Function to Add Signposts
-    function createSignpost(text, x, z, offsetX = 250, offsetZ = 250) {
-        // Create pole
-        const poleGeometry = new THREE.CylinderGeometry(5, 5, 130, 16);
-        const poleMaterial = new THREE.MeshStandardMaterial({ color: 0x8b5a2b });
-        const pole = new THREE.Mesh(poleGeometry, poleMaterial);
-        pole.position.set(x + offsetX, 85, z + offsetZ);
+    // // ✅ Function to Add Signposts
+    // function createSignpost(text, x, z, offsetX = 250, offsetZ = 250) {
+    //     // Create pole
+    //     const poleGeometry = new THREE.CylinderGeometry(5, 5, 130, 16);
+    //     const poleMaterial = new THREE.MeshStandardMaterial({ color: 0x8b5a2b });
+    //     const pole = new THREE.Mesh(poleGeometry, poleMaterial);
+    //     pole.position.set(x + offsetX, 85, z + offsetZ);
 
-        // Create signboard (Bigger Size, Double-Sided)
-        const signGeometry = new THREE.PlaneGeometry(220, 110);
+    //     // Create signboard (Bigger Size, Double-Sided)
+    //     const signGeometry = new THREE.PlaneGeometry(220, 110);
 
-        function createTextTexture(text) {
-            const canvas = document.createElement('canvas');
-            canvas.width = 512;
-            canvas.height = 256;
-            const ctx = canvas.getContext('2d');
-            ctx.fillStyle = 'black';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = 'white';
-            ctx.font = 'Bold 60px Arial';
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            ctx.fillText(text, canvas.width / 2, canvas.height / 2);
-            return new THREE.CanvasTexture(canvas);
-        }
+    //     function createTextTexture(text) {
+    //         const canvas = document.createElement('canvas');
+    //         canvas.width = 512;
+    //         canvas.height = 256;
+    //         const ctx = canvas.getContext('2d');
+    //         ctx.fillStyle = 'black';
+    //         ctx.fillRect(0, 0, canvas.width, canvas.height);
+    //         ctx.fillStyle = 'white';
+    //         ctx.font = 'Bold 60px Arial';
+    //         ctx.textAlign = 'center';
+    //         ctx.textBaseline = 'middle';
+    //         ctx.fillText(text, canvas.width / 2, canvas.height / 2);
+    //         return new THREE.CanvasTexture(canvas);
+    //     }
 
-        const texture = createTextTexture(text);
-        const signMaterial = new THREE.MeshBasicMaterial({ map: texture, side: THREE.DoubleSide });
+    //     const texture = createTextTexture(text);
+    //     const signMaterial = new THREE.MeshBasicMaterial({ map: texture, side: THREE.DoubleSide });
 
-        const sign = new THREE.Mesh(signGeometry, signMaterial);
-        sign.position.set(x + offsetX, 150, z + offsetZ + 30);
-        sign.rotation.y = Math.PI / 6; // Adjust rotation for visibility
+    //     const sign = new THREE.Mesh(signGeometry, signMaterial);
+    //     sign.position.set(x + offsetX, 150, z + offsetZ + 30);
+    //     sign.rotation.y = Math.PI / 6; // Adjust rotation for visibility
 
-        // Add to scene
-        scene.add(pole);
-        scene.add(sign);
-    }
+    //     // Add to scene
+    //     scene.add(pole);
+    //     scene.add(sign);
+    // }
 
-    // Add Signposts Next to Key Buildings
-    createSignpost("Work Experience", 1400, -1900);
-    createSignpost("Education", 0, 2700);
-    createSignpost("Projects", 2400, -1100);
-    createSignpost("Skills", -1900, 1700);
+    // // Add Signposts Next to Key Buildings
+    // createSignpost("Work Experience", 1400, -1900);
+    // createSignpost("Education", 0, 2700);
+    // createSignpost("Projects", 2400, -1100);
+    // createSignpost("Skills", -1900, 1700);
 
     // Now the signs should be correctly visible from both sides!
 
