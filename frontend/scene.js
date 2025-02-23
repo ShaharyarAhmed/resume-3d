@@ -4,6 +4,93 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js';
 import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js';
 
+
+
+function getWorkExperienceModels(allWorkExperience) {
+    const buildings = [
+        { modelPath: '/work_building1.glb', scale: 700, rotation: 1.5 },
+        { modelPath: '/work_building3.glb', scale: 900, rotation: -3 },
+        { modelPath: '/work_building4.glb', scale: 600, rotation: 1.5 },
+    ];
+
+    const outputBuildings = [];
+    const zStart = 500;
+    const zSpacing = 600; // Space between buildings
+
+    for (let i = 0; i < allWorkExperience.length; i++) {
+        const assignedBuilding = buildings[i % buildings.length]; // Cycle through available models
+        const zPosition = zStart + i * zSpacing; // Adjust z position dynamically
+        const yPosition = assignedBuilding.modelPath === '/work_building3.glb' ? 700 : 0;
+
+        outputBuildings.push({
+            modelPath: assignedBuilding.modelPath,
+            position: { x: -500, y: yPosition, z: zPosition },
+            scale: assignedBuilding.scale,
+            rotation: assignedBuilding.rotation,
+            text: {
+                content: allWorkExperience[i].company,
+                position: { x: -200, y: 20, z: zPosition + 100 }, // Text in front of building
+                rotation: 1.5,
+                color: 0xffffff,
+                size: 40
+            }
+        });
+    }
+
+    console.log('--------------------');
+    console.log(outputBuildings);
+    return outputBuildings;
+}
+
+function getEducationModels(allEducation) {
+    const buildings = [
+        { modelPath: '/school_building.glb', type: 'school', scale: 500, rotation: 0.0 },
+        { modelPath: '/college_building.glb', type: 'college', scale: 400, rotation: -1.5 },
+        { modelPath: '/university_building2.glb', type: 'university', scale: 600, rotation: 1.5 },
+    ];
+
+    const outputBuildings = [];
+    const zStart = -500;
+    const zSpacing = 600; // Space between buildings
+
+    for (let i = 0; i < allEducation.length; i++) {
+        const assignedBuilding = buildings[i % buildings.length]; // Cycle through available models
+        const zPosition = zStart + -(i * zSpacing); // Adjust z position dynamically
+        const yPosition = 0;
+
+        outputBuildings.push({
+            modelPath: assignedBuilding.modelPath,
+            position: { x: -500, y: yPosition, z: zPosition },
+            scale: assignedBuilding.scale,
+            rotation: assignedBuilding.rotation,
+            text: {
+                content: allEducation[i].institution,
+                position: { x: -200, y: 20, z: zPosition + 100 }, // Text in front of building
+                rotation: 1.5,
+                color: 0xffffff,
+                size: 20
+            }
+        });
+    }
+
+    console.log('--------------------');
+    console.log(outputBuildings);
+    return outputBuildings;
+}
+
+
+// function getWorkExperienceModels(allWorkExperience) {
+//     const buildings = [
+//         { modelPath: '/work_building1.glb', position: { x: -500, y: 0, z: 500 }, scale: 700, rotation: 1.5 },
+//         { modelPath: '/work_building3.glb', position: { x: -500, y: 700, z: 1000 }, scale: 900, rotation: -3 },
+//         { modelPath: '/work_building4.glb', position: { x: -500, y: 0, z: 1500 }, scale: 600, rotation: 1.5 },
+//     ];
+
+//     const outputBuildings = []
+
+//     console.log(allWorkExperience);
+// }
+
 export async function createScene(allSkill, allWorkExperience, allEducation) {
 
     // ✅ Create Scene
@@ -11,7 +98,6 @@ export async function createScene(allSkill, allWorkExperience, allEducation) {
     scene.background = new THREE.Color(0xffe0a7); // ✅ Keeping same color
 
     scene.fog = new THREE.Fog(0xe8a87c, 50, 2500);
-
 
     const renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
@@ -29,8 +115,6 @@ export async function createScene(allSkill, allWorkExperience, allEducation) {
     document.addEventListener('click', () => {
         controls.lock();
     });
-
-
 
     // ✅ Large Ground (Keeping the Original Color)
     const groundGeometry = new THREE.PlaneGeometry(10000, 10000);
@@ -66,7 +150,7 @@ export async function createScene(allSkill, allWorkExperience, allEducation) {
     }
 
     const rockPositions = [
-        [-1150, -750], [980, 1150], [-1080, 920], [1350, -1450], [690, 1680], [-1580, 530], [1280, -1380], [-100, 200], [400, -500]
+        [-1150, -750], [980, 1150], [-1080, 920], [1350, -1450], [690, 1680], [-1580, 530], [1280, -1380], [400, -500]
     ];
     rockPositions.forEach(([x, z]) => createRock(x, z));
 
@@ -149,6 +233,7 @@ export async function createScene(allSkill, allWorkExperience, allEducation) {
     treePositions.forEach(([x, z]) => createTree(x, z));
 
     // ✅ Adding 3D Text
+    // parameters: text, x, y, z, rotation, color, size
     function createText(text, x, y, z, rotation = 0, color = 0xFFFFFF, size = 100) {
         const loader = new FontLoader();
         loader.load('https://threejs.org/examples/fonts/optimer_regular.typeface.json', function (font) {
@@ -174,14 +259,14 @@ export async function createScene(allSkill, allWorkExperience, allEducation) {
         });
     }
 
-    createText('School', -200, 20, -400, 1.5, 0xffffff, 40);
-    createText('College', -200, 20, -900, 1.5, 0xffffff, 40);
-    createText('University', -200, 20, -1400, 1.5, 0xffffff, 40);
+    // createText('School', -200, 20, -400, 1.5, 0xffffff, 40);
+    // createText('College', -200, 20, -900, 1.5, 0xffffff, 40);
+    // createText('University', -200, 20, -1400, 1.5, 0xffffff, 40);
 
-    createText('Google', -200, 20, 600, 1.5, 0xffffff, 40);
-    createText('Microsoft', -200, 20, 1100, 1.5, 0xffffff, 40);
-    createText('Amazon', -200, 20, 1600, 1.5, 0xffffff, 40);
-    createText('Apple', -200, 20, 2100, 1.5, 0xffffff, 40);
+    // createText('Google', -200, 20, 600, 1.5, 0xffffff, 40);
+    // createText('Microsoft', -200, 20, 1100, 1.5, 0xffffff, 40);
+    // createText('Amazon', -200, 20, 1600, 1.5, 0xffffff, 40);
+    // createText('Apple', -200, 20, 2100, 1.5, 0xffffff, 40);
 
     createText('Skills', 600, 20, 1500, 0.5, 0x000000, 80);
 
@@ -199,16 +284,16 @@ export async function createScene(allSkill, allWorkExperience, allEducation) {
     // ✅ Placeholder for Different Models (UNCHANGED)
     const buildings = [
         // Education
-        { modelPath: '/school_building.glb', position: { x: -500, y: 0, z: -500 }, scale: 500, rotation: 0.0 },
-        { modelPath: '/college_building.glb', position: { x: -500, y: 0, z: -1000 }, scale: 400, rotation: -1.5 },
-        { modelPath: '/university_building2.glb', position: { x: -500, y: 0, z: -1500 }, scale: 600, rotation: 1.5 },
+        // { modelPath: '/school_building.glb', position: { x: -500, y: 0, z: -500 }, scale: 500, rotation: 0.0 },
+        // { modelPath: '/college_building.glb', position: { x: -500, y: 0, z: -1000 }, scale: 400, rotation: -1.5 },
+        // { modelPath: '/university_building2.glb', position: { x: -500, y: 0, z: -1500 }, scale: 600, rotation: 1.5 },
         // { modelPath: '/paper_airplane2.glb', position: { x: -500, y: 0, z: 0 }, scale: 700, rotation: 1.5 },
 
         // Work
-        { modelPath: '/work_building1.glb', position: { x: -500, y: 0, z: 500 }, scale: 700, rotation: 1.5 },
-        { modelPath: '/work_building3.glb', position: { x: -500, y: 700, z: 1000 }, scale: 900, rotation: -3 },
-        { modelPath: '/work_building4.glb', position: { x: -500, y: 0, z: 1500 }, scale: 600, rotation: 1.5 },
-        { modelPath: '/work_building1.glb', position: { x: -500, y: 10, z: 2000 }, scale: 700, rotation: 1.5 },
+        // { modelPath: '/work_building1.glb', position: { x: -500, y: 0, z: 500 }, scale: 700, rotation: 1.5 },
+        // { modelPath: '/work_building3.glb', position: { x: -500, y: 700, z: 1000 }, scale: 900, rotation: -3 },
+        // { modelPath: '/work_building4.glb', position: { x: -500, y: 0, z: 1500 }, scale: 600, rotation: 1.5 },
+        // { modelPath: '/work_building1.glb', position: { x: -500, y: 10, z: 2000 }, scale: 700, rotation: 1.5 },
     ];
 
     // ✅ Load Models (UNCHANGED)
@@ -234,6 +319,20 @@ export async function createScene(allSkill, allWorkExperience, allEducation) {
     // ✅ Import Models
     buildings.forEach(({ modelPath, position, scale, rotation }) => {
         addModel(modelPath, position.x, position.y, position.z, scale, rotation);
+    });
+
+    // work experience models
+    const workExperienceModels = getWorkExperienceModels(allWorkExperience);
+    workExperienceModels.forEach(({ modelPath, position, scale, rotation, text }) => {
+        addModel(modelPath, position.x, position.y, position.z, scale, rotation);
+        createText(text.content, text.position.x, text.position.y, text.position.z, text.rotation, text.color, text.size);
+    });
+
+    // education models
+    const educationModels = getEducationModels(allEducation);
+    educationModels.forEach(({ modelPath, position, scale, rotation, text }) => {
+        addModel(modelPath, position.x, position.y, position.z, scale, rotation);
+        createText(text.content, text.position.x, text.position.y, text.position.z, text.rotation, text.color, text.size);
     });
 
     // ✅ Car Model (Now Visible)
