@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
         fakeApiCall().then((data) => {
             document.body.innerHTML = '';
             // initScene(data);
-            initializeScene();
+            initializeScene(data);
         });
     });
 });
@@ -168,9 +168,15 @@ function fakeApiCall() {
     });
 }
 
-async function initializeScene() {
+async function initializeScene(data) {
+    console.log(data);
+
+    const allSkill = data.skills;
+    const allWorkExperience = data.work_experience;
+    const allEducation = data.education;
+
     // ✅ Initialize Scene
-    const { scene, camera, renderer, controls, airplane, updateCameraPosition, animateFunction } = await createScene();
+    const { scene, camera, renderer, controls, airplane, updateCameraPosition } = await createScene(allSkill, allWorkExperience, allEducation);
 
     // ✅ Car Movement
     let velocity = 0;
