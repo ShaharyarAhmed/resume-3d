@@ -181,6 +181,21 @@ createText('Microsoft', -200, 20, 1100, 1.5, 0xffffff, 40);
 createText('Amazon', -200, 20, 1600, 1.5, 0xffffff, 40);
 createText('Apple', -200, 20, 2100, 1.5, 0xffffff, 40);
 
+createText('Skills', 600, 20, 1500, 1.5, 0x000000, 80);
+
+function createTextList(textList, startX, startY, startZ, spacing) {
+    textList.forEach((text, index) => {
+        const x = startX;
+        const y = startY;
+        const z = startZ + index * spacing; // Adjust z position for equal spacing
+        createText(text, x, y, z, 0, 0xffffff, 40);
+    });
+}
+
+// Example Usage:
+const skills = ['nodejs', 'javascript', 'react', 'threejs', 'mysql', 'elasticsearch', 'rabbitmq', 'docker']
+createTextList(skills, 200, 20, 500, 300);
+
 
 // ✅ Placeholder for Different Models (UNCHANGED)
 const buildings = [
